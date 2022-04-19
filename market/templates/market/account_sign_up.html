@@ -1,0 +1,77 @@
+{% extends "market/base_header_plain.html" %}
+
+{% block css %}
+ul {
+    list-style-type: none;
+}
+input, li {
+    max-width: 420px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <ul class="text-danger">
+            {% for error in form.non_field_errors %}
+            <li>{{ error | escape }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <h2>Зареєструйтесь:</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="first_name">Ваше імя:</label>
+                <input type="text" name="first_name" {% if form.first_name.value %}value="{{ form.first_name.value }}"{% endif %} class="form-control" id="first_name" placeholder="Введіть ваще імя">
+                <ul class="text-danger px-0">
+                    {% for error in form.first_name.errors %}
+                    <li>{{ error | escape }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Ваша фамілія:</label>
+                <input type="text" name="last_name" {% if form.last_name.value %}value="{{ form.last_name.value }}"{% endif %} class="form-control" id="last_name" placeholder="Введіть ваше прізвище">
+                <ul class="text-danger px-0">
+                        {% for error in form.last_name.errors %}
+                        <li>{{ error | escape }}</li>
+                        {% endfor %}
+                </ul>
+            </div>
+            <input type="hidden" id="username" name="username" value="{{ form.username.value }}">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" name="email" {% if form.email.value %}value="{{ form.email.value }}"{% endif %} class="form-control" id="email" placeholder="Вхід Email" onkeyup="$('#username').val(this.value);">
+                <ul class="text-danger px-0">
+                        {% for error in form.email.errors %}
+                        <li>{{ error | escape }}</li>
+                        {% endfor %}
+                </ul>
+            </div>
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" name="password1" class="form-control" id="password" placeholder="Ввудіть пароль">
+                <ul class="text-danger px-0">
+                        {% for error in form.password1.errors %}
+                        <li>{{ error | escape }}</li>
+                        {% endfor %}
+                </ul>
+            </div>
+            <div class="form-group">
+                <label for="one_more_password">Повторіть пароль</label>
+                <input type="password" name="password2" class="form-control" id="one_more_password" placeholder="Повторіть пароль">
+                <ul class="text-danger px-0">
+                        {% for error in form.password2.errors %}
+                        <li>{{ error | escape }}</li>
+                        {% endfor %}
+                </ul>
+            </div>
+            <button type="submit" class="btn btn-primary">Зареєструватись</button>
+        </form>
+    </div>
+</div>
+    {% endblock %}

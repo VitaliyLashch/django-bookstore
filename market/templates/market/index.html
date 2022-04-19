@@ -1,0 +1,77 @@
+{% extends "market/base_header_no_search.html" %}
+
+{% block content %}
+<div class="row mb-4">
+	<form method="get" action="{% url "search" %}" class="w-75 mx-auto">
+		<div class="input-group">
+			<div class="input-group-prepend d-none d-md-block">
+				<span class="input-group-text">Ковальництво</span>
+			</div>
+			<input class="form-control" type="text" placeholder="Знайти книгу..." name="query" value="{{ form.query.data }}">
+			<input type="hidden" name="sort" value="relevance">
+			<input type="hidden" name="maxprice" value="99999">
+			<input type="hidden" name="category" value="">
+			<span class="input-group-append">
+				<button class="btn btn-success" type="submit">Знайти</button>
+			</span>
+		</div>
+	</form>
+</div>
+<div class="row px-2">
+	<h3>Популярні книги</h3>
+</div>
+<div class="row my-3 px-2">
+	<div class="card-deck">
+
+		{% for book in popular_books %}
+		<div class="card {% if forloop.counter == 4 or forllop.count == 5 %}d-none d-lg-block{% endif %}">
+			<img class="card-img-top" src="{{ book.cover.url }}" alt="Обгортка книги: {{ book }}">
+			<div class="card-body">
+				<a href="{% url 'product_page' book.pk %}" class="card-text">{{ book.title }}</a>
+				<div class="card-text font-weight-bold">{{ book.price }} Грн.</div>
+				<div class="card-text">
+					<small class="text-muted">
+						{% for author in book.authors.all %}
+							{{ author.name }}
+							{% if not forloop.last %}, {% endif %}
+						{% endfor %}
+					</small>
+				</div>
+				<div class="card-text">
+					<small class="text-warning">
+					{% if book.score < 0.5 %}
+					☆☆☆☆☆
+					{% elif book.score >= 0.5 and book.score < 1.5 %}
+					★☆☆☆☆
+					{% elif book.score >= 1.5 and book.score < 2.5 %}
+					★★☆☆☆
+					{% elif book.score >= 2.5 and book.score < 3.5 %}
+					★★★☆☆
+					{% elif book.score >= 3.5 and book.score < 4.5 %}
+					★★★★☆
+					{% else %}
+					★★★★★
+					{% endif %}
+					</small>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+
+	</div>
+</div>
+<div class="row mt-5 px-2">
+	<h3>Книги по жанрам:</h3>
+</div>
+<div class="row mb-5 mt-2 px-2">
+	{% for category_block in categories %}
+	<div class="col-md-4 pl-0">
+		{% for category in category_block %}
+		<h5>
+			<a href="/search?query=&maxprice=9999&sort=relevance&category={{ category.pk }}">{{ category.name }}</a>
+		</h5>
+		{% endfor %}
+	</div>
+	{% endfor %}
+</div>
+{% endblock %}

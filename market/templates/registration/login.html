@@ -1,0 +1,61 @@
+{% extends "market/base_header_plain.html" %}
+
+{% block css %}
+ul {
+    list-style-type: none;
+}
+input, button, li, p {
+    max-width: 420px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <ul class="text-danger px-0">
+                {% for error in form.non_field_errors %}
+                <li>{{ error | escape }}</li>
+                {% endfor %}
+        </ul>
+        <p class="text-danger">
+        {% if next %}
+            {% if user.is_authenticated %}
+У вашому обліковому записі немає доступу до запитуваної сторінки. Ви можете увійти до облікового запису, який має доступ            {% else %}
+Увійдіть, щоб переглядати цю сторінку
+            {% endif %}
+        {% endif %}
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <h2>Увійти:</h2>
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="input_email">Юзернейм:</label>
+                <input  name="username" class="form-control" id="input_email" placeholder="Введіть імя користувача">
+                <ul class="text-danger px-0">
+                        {% for error in form.username.errors %}
+                        <li>{{ error | escape }}</li>
+                        {% endfor %}
+                </ul>
+            </div>
+            <div class="form-group">
+                <label for="input_password">Пароль:</label>
+                <input type="password" name="password" class="form-control" id="input_password" placeholder="Введіть пароль">
+                <ul class="text-danger px-0">
+                        {% for error in form.password.errors %}
+                        <li>{{ error | escape }}</li>
+                        {% endfor %}
+                </ul>
+            </div>
+            <input type="hidden" name="next" value="{{ next }}">
+            <button type="submit" class="btn btn-primary btn-block">Увійти</button>
+            <small>
+                    <a href="{% url 'password_reset' %}">Скинути пароль</a>
+            </small>
+        </form>
+    </div>
+</div>
+{% endblock %}

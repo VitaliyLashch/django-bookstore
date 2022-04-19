@@ -1,0 +1,33 @@
+{% extends "market/base_header_with_search.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+    Ви можете змінити свій пароль на сайті <a href="{% url 'password_change' %}"> тут</a>
+    </div>
+</div>
+<div class="row my-4">
+    <div class="col-12">
+    <h3>Книги, які ви придбали</h3>
+    <ul>
+    {% for book in books.all %}
+        <li><a href="{% url 'product_page' book.pk %}">{{ book }}</a></li>
+    {% empty %}
+        <li>У вас немає жодної придбаної книги</li>
+    {% endfor %}
+    </ul>
+</div>
+</div>
+<div class="row my-2">
+    <div class="col-12">
+        <h3>Книги про які ви відгукнулись</h3>
+        <ul>
+        {% for comment in comments.all %}
+            <li><a href="{% url 'product_page' comment.book.pk %}">{{ comment.book }}</a></li>
+        {% empty %}
+            <li>У вас немає відгуків по книгах</li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

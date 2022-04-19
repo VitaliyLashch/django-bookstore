@@ -1,0 +1,14 @@
+{% extends "market/base_header_plain.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-8 mx-auto">
+        <p class="text-success">Аккаунт успішно підтверджено!</p>
+        <p>
+
+Тепер ви можете увійти на сайт під вашим обліковим записом.
+        </p>
+        <a href="{% url 'login' %}" class="btn btn-success" role="button">Увійти</a>
+    </div>
+</div>
+{% endblock %}

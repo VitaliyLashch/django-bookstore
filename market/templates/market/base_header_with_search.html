@@ -1,0 +1,17 @@
+{% extends "market/base_header_no_search.html" %}
+
+{% block header_menu %}
+{{ block.super }}
+<form action="{% url "search" %}" class="form-inline mt-2 mt-md-0 d-none d-md-block">
+        <div class="input-group">
+            <input type="hidden" name="sort" value="relevance">
+            <input type="hidden" name="maxprice" value="99999">
+            <input type="hidden" name="category" value="">
+            <input class="form-control" type="text" placeholder="Знайти книгу..." name="query">
+            <span class="input-group-append">
+                <button class="btn btn-success" type="submit">Знайти</button>
+            </span>
+        </div>
+</form>
+{% endblock %}
+

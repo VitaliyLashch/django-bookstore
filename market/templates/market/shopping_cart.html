@@ -1,0 +1,28 @@
+{% extends "market/base_header_with_search.html" %}
+
+{% block content %}
+<div class="row px-2">
+    <h2>Ваша корзина:</h2>
+</div>
+{% for book in books.all %}
+<div class="row px-2">
+    <form method="post" action="{% url 'shopping_cart_remove' %}">
+        {% csrf_token %}
+        <a href="{% url 'product_page' book.pk %}">{{ book }}</a>
+        <input type="hidden" name="book_pk" value="{{ book.pk }}"/>
+        <input type="hidden" name="next_link" value="{% url 'shopping_cart' %}"/>
+        <button class="btn btn-sm" type="submit">Викласти з корзини</button>
+    </form>
+</div>
+{% if forloop.last %}
+<div class="row mt-3 px-2">
+    <form method="post" action="{% url 'shopping_cart_submit' %}">
+        {% csrf_token %}
+        <button class="btn btn-large btn-success" type="submit">Оформити замовлення</button>
+    </form>
+</div>
+{% endif %}
+{% empty %}
+<div class="row px-2">Корзина порожня</div>
+{% endfor %}
+{% endblock %}

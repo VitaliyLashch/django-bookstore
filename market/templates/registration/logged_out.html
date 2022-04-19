@@ -1,0 +1,13 @@
+{% extends "market/base_header_plain.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-8 mx-auto">
+        <p>
+
+Ви вийшли зі свого облікового запису на сайті.        </p>
+        <a class="btn btn-light" href="/" role="button">На головну</a>
+        <a class="btn btn-success" href="{% url 'login' %}" role="button">Увійти знову</a>
+    </div>
+</div>
+{% endblock %}

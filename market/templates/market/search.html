@@ -1,0 +1,131 @@
+{% extends "market/base_header_no_search.html" %}
+	
+{% block css %}
+@media (min-width: 576px) {
+	.card-columns {
+		column-count: 3;
+	}
+}
+
+@media (min-width: 768px) {
+	.card-columns {
+		column-count: 3;
+	}
+}
+
+@media (min-width: 992px) {
+	.card-columns {
+		column-count: 4;
+	}
+}
+
+@media (min-width: 1200px) {
+	.card-columns {
+		column-count: 4;
+	}
+}
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+	<form method="get" class="w-75 mx-auto">
+		<div class="input-group">
+			<div class="input-group-prepend d-none d-md-block">
+				<span class="input-group-text">Ковальництво</span>
+			</div>
+			<input class="form-control" type="text" placeholder="Найти книгу..." name="query" value="{{ form.query.data }}">
+			<input type="hidden" name="sort" value="relevance">
+			<input type="hidden" name="maxprice" value="99999">
+			<input type="hidden" name="category" value="">
+			<span class="input-group-append">
+				<button class="btn btn-success" type="submit">Знайти</button>
+			</span>
+		</div>
+	</form>
+</div>
+<div class="row my-3">
+	<div class="col-md-3 mb-3">
+		<form method="get" class="rounded border p-3">
+			<input type="hidden" name="query" value="{{ form.query.data }}">
+			<div class="form-group">
+				<legend class="col-form-label font-weight-bold">Сортування:</legend>
+				<div class="custom-control custom-radio">
+					<input class="custom-control-input" type="radio" name="sort" id="sort_rel_input" value="relevance" {% if form.sort.data == "relevance"%}checked{% endif %}>
+					<label class="custom-control-label" for="sort_rel_input">
+						По релевантності
+					</label>
+				</div>
+				<div class="custom-control custom-radio">
+					<input class="custom-control-input" type="radio" name="sort" value="popularity" id="sort_popularity_input" {% if form.sort.data == "popularity" %}checked{% endif %}>
+					<label class="custom-control-label" for="sort_popularity_input">
+						По популярності
+					</label>
+				</div>
+				<div class="custom-control custom-radio">
+					<input class="custom-control-input" type="radio" name="sort" value="reviews" id="sort_reviews_input"  {% if form.sort.data == "reviews"%}checked{% endif %}>
+					<label class="custom-control-label" for="sort_reviews_input">
+						По рейтингу
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="max_price" class="font-weight-bold">Ціна до:</label>
+				<input class="form-control form-control-sm" type="number" id="upper_price" name="maxprice" min="100" max="99999" value="{{ form.maxprice.data }}"
+					placeholder="В гривнях">
+			</div>
+			<div class="form-group">
+				<label for="genre" class="font-weight-bold">Категорія книги:</label>
+				<select class="custom-select" id="genre" name="category">
+					<option value="">Будь-яка категорія</option>
+					{% for pk, name in form.category.field.choices %}
+					<option value="{{ pk }}"{% if form.data.category == pk|stringformat:'s' %} selected{% endif %}>{{ name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<button class="btn btn-block">Применить</button>
+		</form>
+	</div>
+	<div class="col-md-9">
+		<div class="card-columns">
+			{% for book in books %}
+			<div class="card">
+				<img class="card-img-top" src="{{ book.cover.url }}">
+				<div class="card-body">
+					<a href="{% url 'product_page' book.pk %}" class="card-text">{{ book.title }}</a>
+					<div class="card-text font-weight-bold">{{ book.price }} Грн.</div>
+					<div class="card-text">
+						<small class="text-muted">
+						{% for author in book.authors.all %}
+						{{ author.name }}
+						{% if not forloop.last %}, {% endif %}
+						{% endfor %}
+						</small>
+					</div>
+					<div class="card-text">
+						<small class="text-warning">
+						{% if book.score < 0.5 %}
+						☆☆☆☆☆
+						{% elif book.score >= 0.5 and book.score < 1.5 %}
+						★☆☆☆☆
+						{% elif book.score >= 1.5 and book.score < 2.5 %}
+						★★☆☆☆
+						{% elif book.score >= 2.5 and book.score < 3.5 %}
+						★★★☆☆
+						{% elif book.score >= 3.5 and book.score < 4.5 %}
+						★★★★☆
+						{% else %}
+						★★★★★
+						{% endif %}
+						</small>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		<nav class="text-center my-5 d-none">
+			<button class="btn btn-outline-primary" onclick="$('.card.d-none').slice(0, 4).removeClass('d-none');">Завантажити ще раз</button>
+		</nav>
+
+	</div>
+</div>
+{% endblock %}
